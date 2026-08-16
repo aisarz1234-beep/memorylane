@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Memory</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #faf9f7;
+            color: #2b2b2b;
+        }
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 60px 24px 100px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: #8a8a8a;
+            text-decoration: none;
+        }
+        .back-link:hover { color: #2b2b2b; }
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin: 0 0 32px;
+        }
+        form {
+            background: #fff;
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid #f0efec;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b6b6b;
+            margin-bottom: 6px;
+            margin-top: 20px;
+        }
+        label:first-of-type { margin-top: 0; }
+        input[type="text"],
+        input[type="url"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 14px;
+            border: 1px solid #e5e3df;
+            border-radius: 10px;
+            font-family: inherit;
+            background: #fafaf9;
+        }
+        textarea { resize: vertical; }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #2b2b2b;
+        }
+        button {
+            width: 100%;
+            margin-top: 28px;
+            background: #2b2b2b;
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: 999px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        button:hover { opacity: 0.85; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a class="back-link" th:href="@{/}">← Back to timeline</a>
+    <h1>Add a new memory</h1>
+
+    <form th:action="@{/save}" th:object="${memory}" method="post" enctype="multipart/form-data">
+        <label>Title</label>
+        <input type="text" th:field="*{title}" placeholder="Give it a name">
+
+        <label>Your story</label>
+        <textarea th:field="*{text}" rows="5" placeholder="What happened?"></textarea>
+
+        <label>Photo</label>
+        <input type="file" name="photo" accept="image/*">
+
+        <label>Song link</label>
+        <input type="url" th:field="*{songLink}" placeholder="https://open.spotify.com/...">
+
+        <button type="submit">Save memory</button>
+    </form>
+</div>
+</body>
+</html>

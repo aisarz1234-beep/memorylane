@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MemoryLane</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #faf9f7;
+            color: #2b2b2b;
+        }
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 60px 24px 100px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin: 0 0 8px;
+        }
+        header p {
+            color: #8a8a8a;
+            font-size: 14px;
+            margin: 0 0 24px;
+        }
+        .add-btn {
+            display: inline-block;
+            background: #2b2b2b;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            transition: opacity 0.15s;
+        }
+        .add-btn:hover { opacity: 0.8; }
+
+        .memory-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            border: 1px solid #f0efec;
+        }
+        .memory-card h2 {
+            font-size: 19px;
+            font-weight: 600;
+            margin: 0 0 10px;
+        }
+        .memory-card p.text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #4a4a4a;
+            margin: 0 0 16px;
+            white-space: pre-line;
+        }
+        .memory-card img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            display: block;
+        }
+        .song-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #6b6b6b;
+            text-decoration: none;
+            border: 1px solid #e5e3df;
+            padding: 6px 12px;
+            border-radius: 999px;
+        }
+        .song-link:hover { background: #f5f4f1; }
+        .memory-date {
+            display: block;
+            margin-top: 16px;
+            font-size: 12px;
+            color: #b3b1ac;
+        }
+        .empty-state {
+            text-align: center;
+            color: #a3a19c;
+            font-size: 14px;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>MemoryLane</h1>
+        <p>Your digital scrapbook</p>
+        <a class="add-btn" th:href="@{/new}">+ Add a memory</a>
+    </header>
+
+    <div th:each="memory : ${memories}" class="memory-card">
+        <h2 th:text="${memory.title}">Title</h2>
+        <img th:if="${memory.photoPath}" th:src="@{${memory.photoPath}}" />
+        <p class="text" th:text="${memory.text}">Text</p>
+        <a th:if="${memory.songLink}" class="song-link" th:href="${memory.songLink}" target="_blank">
+            🎵 Listen
+        </a>
+        <small class="memory-date" th:text="${memory.createdAt}">Date</small>
+    </div>
+
+    <p class="empty-state" th:if="${#lists.isEmpty(memories)}">
+        No memories yet — add your first one above.
+    </p>
+</div>
+</body>
+</html>
