@@ -45,4 +45,10 @@ public class MemoryController {
         repo.save(memory);
         return "redirect:/";
     }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        repo.deleteById(id);
+        return "redirect:/";
+    }
 }
