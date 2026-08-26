@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
+import java.util.List;
 
 @Controller
 public class MemoryController {
@@ -35,12 +36,18 @@ public class MemoryController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute Memory memory,
-                       @RequestParam("photo") MultipartFile photo) throws IOException {
-        if (!photo.isEmpty()) {
+                       @RequestParam(value = "photos", required = false) List<MultipartFile> photos) throws IOException {
+        if (photos != null) {
             Files.createDirectories(Paths.get(uploadDir));
-            String filename = UUID.randomUUID() + "_" + photo.getOriginalFilename();
-            photo.transferTo(Paths.get(uploadDir + filename));
-            memory.setPhotoPath("/uploads/" + filename);
+            int max = Math.min(photos.size(), 6); // cap at 6, even if more are selected
+            for (int i = 0; i < max; i++) {
+                MultipartFile photo = photos.get(i);
+                if (!photo.isEmpty()) {
+                    String filename = UUID.randomUUID() + "_" + photo.getOriginalFilename();
+                    photo.transferTo(Paths.get(uploadDir + filename));
+                    memory.getPhotoPaths().add("/uploads/" + filename);
+                }
+            }
         }
         repo.save(memory);
         return "redirect:/";

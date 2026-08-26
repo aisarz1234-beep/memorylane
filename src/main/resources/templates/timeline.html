@@ -3,136 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <title>MemoryLane</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --paper: #F1ECDF;
+            --paper-deep: #E7DFC9;
+            --ink: #2A2620;
+            --ink-muted: #83796A;
+            --blue: #34506B;
+            --sage: #7C8B6F;
+            --rust: #B8503F;
+        }
         * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-            background: #faf9f7;
-            color: #2b2b2b;
+            background-color: var(--paper);
+            background-image:
+                    radial-gradient(rgba(0,0,0,0.025) 1px, transparent 1px);
+            background-size: 3px 3px;
+            color: var(--ink);
+            font-family: 'Inter', sans-serif;
         }
         .container {
-            max-width: 680px;
+            max-width: 640px;
             margin: 0 auto;
-            padding: 60px 24px 100px;
+            padding: 72px 24px 120px;
         }
-        header {
-            text-align: center;
-            margin-bottom: 48px;
+        header { margin-bottom: 56px; }
+        header .eyebrow {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            display: block;
+            margin-bottom: 10px;
         }
         header h1 {
-            font-size: 28px;
-            font-weight: 600;
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-weight: 500;
+            font-size: 42px;
             letter-spacing: -0.5px;
-            margin: 0 0 8px;
+            margin: 0 0 6px;
         }
-        header p {
-            color: #8a8a8a;
-            font-size: 14px;
-            margin: 0 0 24px;
+        header p.tagline {
+            font-size: 15px;
+            color: var(--ink-muted);
+            margin: 0 0 28px;
         }
         .add-btn {
-            display: inline-block;
-            background: #2b2b2b;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--blue);
             color: #fff;
             text-decoration: none;
-            padding: 10px 22px;
-            border-radius: 999px;
+            padding: 11px 22px;
+            border-radius: 4px;
             font-size: 14px;
-            transition: opacity 0.15s;
+            font-weight: 500;
+            box-shadow: 2px 3px 0 rgba(42,38,32,0.15);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
-        .add-btn:hover { opacity: 0.8; }
+        .add-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 4px 0 rgba(42,38,32,0.18);
+        }
 
         .memory-card {
-            background: #fff;
-            border-radius: 16px;
-            padding: 28px;
-            margin-bottom: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-            border: 1px solid #f0efec;
+            position: relative;
+            background: #fffdf9;
+            border-radius: 3px;
+            padding: 32px 28px 26px;
+            margin: 0 auto 48px;
+            max-width: 480px;
+            box-shadow: 0 10px 24px -12px rgba(42,38,32,0.28);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+        .memory-card:nth-child(3n+1) { transform: rotate(-1.1deg); }
+        .memory-card:nth-child(3n+2) { transform: rotate(0.8deg); }
+        .memory-card:nth-child(3n+3) { transform: rotate(-0.4deg); }
+        .memory-card:hover {
+            transform: rotate(0deg) translateY(-3px);
+            box-shadow: 0 16px 30px -14px rgba(42,38,32,0.32);
+        }
+        .memory-card::before {
+            content: "";
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            width: 68px;
+            height: 26px;
+            margin-left: -34px;
+            background: repeating-linear-gradient(
+                    115deg,
+                    rgba(124,139,111,0.55),
+                    rgba(124,139,111,0.55) 3px,
+                    rgba(124,139,111,0.4) 3px,
+                    rgba(124,139,111,0.4) 6px
+            );
+            opacity: 0.85;
+            transform: rotate(-3deg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
         .memory-card h2 {
-            font-size: 19px;
+            font-family: 'Fraunces', serif;
             font-weight: 600;
-            margin: 0 0 10px;
+            font-size: 21px;
+            margin: 0 0 12px;
+        }
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .photo-grid img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 3px;
+            border: 4px solid #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
         }
         .memory-card p.text {
             font-size: 15px;
-            line-height: 1.6;
-            color: #4a4a4a;
-            margin: 0 0 16px;
+            line-height: 1.7;
+            color: #453F35;
+            margin: 0 0 18px;
             white-space: pre-line;
         }
-        .memory-card img {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 16px;
-            display: block;
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px dashed #E3DCCB;
+            padding-top: 14px;
         }
         .song-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            color: #6b6b6b;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--sage);
             text-decoration: none;
-            border: 1px solid #e5e3df;
-            padding: 6px 12px;
+            border: 1px solid var(--sage);
+            padding: 5px 10px;
             border-radius: 999px;
         }
-        .song-link:hover { background: #f5f4f1; }
+        .song-link:hover { background: var(--sage); color: #fff; }
+        .memory-date {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--ink-muted);
+        }
+        .delete-form { margin: 0; }
         .delete-btn {
             background: none;
             border: none;
-            color: #c4746b;
-            font-size: 12px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--rust);
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 6px;
+            padding: 4px 0;
+            text-decoration: underline dotted;
         }
-        .delete-btn:hover {
-            background: #fbeceb;
-        }
-        .memory-date {
-            display: block;
-            margin-top: 16px;
-            font-size: 12px;
-            color: #b3b1ac;
-        }
+        .delete-btn:hover { color: #8f3c29; }
+
         .empty-state {
             text-align: center;
-            color: #a3a19c;
-            font-size: 14px;
-            margin-top: 60px;
+            border: 1.5px dashed #D8CFB8;
+            border-radius: 6px;
+            padding: 56px 24px;
+            color: var(--ink-muted);
+        }
+        .empty-state .icon {
+            font-family: 'Fraunces', serif;
+            font-size: 30px;
+            display: block;
+            margin-bottom: 10px;
+            color: #C9BFA5;
+        }
+        .empty-state p { margin: 0; font-size: 14px; }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 34px; }
+            .memory-card:nth-child(3n+1),
+            .memory-card:nth-child(3n+2),
+            .memory-card:nth-child(3n+3) { transform: rotate(0deg); }
+            .memory-card:hover { transform: translateY(-2px); }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <header>
-        <h1>MemoryLane</h1>
-        <p>Your digital scrapbook</p>
+        <span class="eyebrow">MemoryLane</span>
+        <h1>A scrapbook of little moments</h1>
+        <p class="tagline">Every memory gets a page.</p>
         <a class="add-btn" th:href="@{/new}">+ Add a memory</a>
     </header>
 
     <div th:each="memory : ${memories}" class="memory-card">
         <h2 th:text="${memory.title}">Title</h2>
-        <img th:if="${memory.photoPath}" th:src="@{${memory.photoPath}}" />
+        <div class="photo-grid" th:if="${not #lists.isEmpty(memory.photoPaths)}">
+            <img th:each="photo : ${memory.photoPaths}" th:src="@{${photo}}" />
+        </div>
         <p class="text" th:text="${memory.text}">Text</p>
-        <a th:if="${memory.songLink}" class="song-link" th:href="${memory.songLink}" target="_blank">
-            🎵 Listen
-        </a>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
-            <small class="memory-date" th:text="${memory.createdAt}" style="margin-top:0;">Date</small>
-            <form th:action="@{'/delete/' + ${memory.id}}" method="post" onsubmit="return confirm('Delete this memory?');">
-                <button type="submit" class="delete-btn">Delete</button>
-            </form>
+
+        <div class="card-footer">
+            <span class="memory-date" th:text="${memory.createdAt}">Date</span>
+            <div style="display:flex; align-items:center; gap:14px;">
+                <a th:if="${memory.songLink}" class="song-link" th:href="${memory.songLink}" target="_blank">▸ Play song</a>
+                <form class="delete-form" th:action="@{'/delete/' + ${memory.id}}" method="post"
+                      onsubmit="return confirm('Delete this memory?');">
+                    <button type="submit" class="delete-btn">Remove</button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <p class="empty-state" th:if="${#lists.isEmpty(memories)}">
-        No memories yet — add your first one above.
-    </p>
+    <div class="empty-state" th:if="${#lists.isEmpty(memories)}">
+        <span class="icon">✳</span>
+        <p>This page is empty. Add your first memory above.</p>
+    </div>
 </div>
 </body>
 </html>

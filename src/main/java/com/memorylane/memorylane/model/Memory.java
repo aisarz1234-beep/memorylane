@@ -2,6 +2,8 @@ package com.memorylane.memorylane.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 public class Memory {
@@ -15,7 +17,12 @@ public class Memory {
     @Column(length = 2000)
     private String text;
 
-    private String photoPath;   // path to uploaded photo
+    @ElementCollection
+    @CollectionTable(name = "memory_photos", joinColumns = @JoinColumn(name = "memory_id"))
+    @Column(name = "photo_path")
+    @OrderColumn(name = "photo_order")
+    private List<String> photoPaths = new ArrayList<>();
+
     private String songLink;    // Spotify/YouTube URL
 
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -31,8 +38,8 @@ public class Memory {
     public String getText() { return text; }
     public void setText(String text) { this.text = text; }
 
-    public String getPhotoPath() { return photoPath; }
-    public void setPhotoPath(String photoPath) { this.photoPath = photoPath; }
+    public List<String> getPhotoPaths() { return photoPaths; }
+    public void setPhotoPaths(List<String> photoPaths) { this.photoPaths = photoPaths; }
 
     public String getSongLink() { return songLink; }
     public void setSongLink(String songLink) { this.songLink = songLink; }

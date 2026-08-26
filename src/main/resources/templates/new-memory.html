@@ -3,83 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <title>New Memory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --paper: #F1ECDF;
+            --ink: #2A2620;
+            --ink-muted: #83796A;
+            --blue: #34506B;
+        }
         * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-            background: #faf9f7;
-            color: #2b2b2b;
+            background-color: var(--paper);
+            background-image: radial-gradient(rgba(0,0,0,0.025) 1px, transparent 1px);
+            background-size: 3px 3px;
+            color: var(--ink);
+            font-family: 'Inter', sans-serif;
         }
         .container {
-            max-width: 520px;
+            max-width: 480px;
             margin: 0 auto;
-            padding: 60px 24px 100px;
+            padding: 72px 24px 120px;
         }
         .back-link {
             display: inline-block;
-            margin-bottom: 24px;
-            font-size: 13px;
-            color: #8a8a8a;
+            margin-bottom: 28px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--ink-muted);
             text-decoration: none;
         }
-        .back-link:hover { color: #2b2b2b; }
+        .back-link:hover { color: var(--ink); }
         h1 {
-            font-size: 24px;
-            font-weight: 600;
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-weight: 500;
+            font-size: 30px;
             letter-spacing: -0.5px;
             margin: 0 0 32px;
         }
         form {
-            background: #fff;
-            border-radius: 16px;
-            padding: 28px;
-            border: 1px solid #f0efec;
+            background: #fffdf9;
+            border-radius: 4px;
+            padding: 32px 28px;
+            box-shadow: 0 10px 24px -14px rgba(42,38,32,0.3);
         }
         label {
             display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #6b6b6b;
-            margin-bottom: 6px;
-            margin-top: 20px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--ink-muted);
+            margin: 22px 0 7px;
         }
         label:first-of-type { margin-top: 0; }
         input[type="text"],
         input[type="url"],
-        input[type="file"],
         textarea {
             width: 100%;
-            padding: 10px 12px;
-            font-size: 14px;
-            border: 1px solid #e5e3df;
-            border-radius: 10px;
-            font-family: inherit;
-            background: #fafaf9;
+            padding: 11px 13px;
+            font-size: 14.5px;
+            font-family: 'Inter', sans-serif;
+            border: 1.5px solid #E3DCCB;
+            border-radius: 4px;
+            background: #fdfbf6;
+            color: var(--ink);
         }
-        textarea { resize: vertical; }
+        textarea {
+            resize: vertical;
+            line-height: 1.7;
+            background-image: repeating-linear-gradient(
+                    to bottom, transparent, transparent 27px, #EEE7D6 28px
+            );
+        }
+        input[type="file"] {
+            width: 100%;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            color: var(--ink-muted);
+        }
         input:focus, textarea:focus {
             outline: none;
-            border-color: #2b2b2b;
+            border-color: var(--blue);
         }
         button {
             width: 100%;
-            margin-top: 28px;
-            background: #2b2b2b;
+            margin-top: 30px;
+            background: var(--blue);
             color: #fff;
             border: none;
             padding: 13px;
-            border-radius: 999px;
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
             font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
-            transition: opacity 0.15s;
+            box-shadow: 2px 3px 0 rgba(42,38,32,0.15);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
-        button:hover { opacity: 0.85; }
+        button:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 4px 0 rgba(42,38,32,0.18);
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <a class="back-link" th:href="@{/}">← Back to timeline</a>
+    <a class="back-link" th:href="@{/}">← Back to MemoryLane</a>
     <h1>Add a new memory</h1>
 
     <form th:action="@{/save}" th:object="${memory}" method="post" enctype="multipart/form-data">
@@ -87,10 +121,10 @@
         <input type="text" th:field="*{title}" placeholder="Give it a name">
 
         <label>Your story</label>
-        <textarea th:field="*{text}" rows="5" placeholder="What happened?"></textarea>
+        <textarea th:field="*{text}" rows="6" placeholder="What happened?"></textarea>
 
-        <label>Photo</label>
-        <input type="file" name="photo" accept="image/*">
+        <label>Photos <span style="font-weight:400; text-transform:none; color:#a89f8f;">(up to 6)</span></label>
+        <input type="file" name="photos" accept="image/*" multiple>
 
         <label>Song link</label>
         <input type="url" th:field="*{songLink}" placeholder="https://open.spotify.com/...">
