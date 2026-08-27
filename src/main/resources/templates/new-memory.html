@@ -5,6 +5,7 @@
     <title>New Memory</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
     <style>
         :root {
             --paper: #F1ECDF;
@@ -21,93 +22,86 @@
             color: var(--ink);
             font-family: 'Inter', sans-serif;
         }
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 72px 24px 120px;
-        }
+        .container { max-width: 480px; margin: 0 auto; padding: 72px 24px 120px; }
         .back-link {
-            display: inline-block;
-            margin-bottom: 28px;
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--ink-muted);
-            text-decoration: none;
+            display: inline-block; margin-bottom: 28px;
+            font-family: 'Space Mono', monospace; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 0.06em;
+            color: var(--ink-muted); text-decoration: none;
         }
         .back-link:hover { color: var(--ink); }
         h1 {
-            font-family: 'Fraunces', serif;
-            font-style: italic;
-            font-weight: 500;
-            font-size: 30px;
-            letter-spacing: -0.5px;
-            margin: 0 0 32px;
+            font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+            font-size: 30px; letter-spacing: -0.5px; margin: 0 0 32px;
         }
         form {
-            background: #fffdf9;
-            border-radius: 4px;
-            padding: 32px 28px;
+            background: #fffdf9; border-radius: 4px; padding: 32px 28px;
             box-shadow: 0 10px 24px -14px rgba(42,38,32,0.3);
         }
         label {
-            display: block;
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--ink-muted);
-            margin: 22px 0 7px;
+            display: block; font-family: 'Space Mono', monospace; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 0.06em;
+            color: var(--ink-muted); margin: 22px 0 7px;
         }
         label:first-of-type { margin-top: 0; }
-        input[type="text"],
-        input[type="url"],
-        textarea {
-            width: 100%;
-            padding: 11px 13px;
-            font-size: 14.5px;
-            font-family: 'Inter', sans-serif;
-            border: 1.5px solid #E3DCCB;
-            border-radius: 4px;
-            background: #fdfbf6;
-            color: var(--ink);
+        input[type="text"], input[type="url"], textarea {
+            width: 100%; padding: 11px 13px; font-size: 14.5px;
+            font-family: 'Inter', sans-serif; border: 1.5px solid #E3DCCB;
+            border-radius: 4px; background: #fdfbf6; color: var(--ink);
         }
         textarea {
-            resize: vertical;
-            line-height: 1.7;
-            background-image: repeating-linear-gradient(
-                    to bottom, transparent, transparent 27px, #EEE7D6 28px
-            );
+            resize: vertical; line-height: 1.7;
+            background-image: repeating-linear-gradient(to bottom, transparent, transparent 27px, #EEE7D6 28px);
         }
-        input[type="file"] {
-            width: 100%;
-            font-size: 13px;
-            font-family: 'Inter', sans-serif;
-            color: var(--ink-muted);
-        }
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--blue);
-        }
-        button {
-            width: 100%;
-            margin-top: 30px;
-            background: var(--blue);
-            color: #fff;
-            border: none;
-            padding: 13px;
-            border-radius: 4px;
-            font-family: 'Inter', sans-serif;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
+        input:focus, textarea:focus { outline: none; border-color: var(--blue); }
+        button { cursor: pointer; font-family: 'Inter', sans-serif; }
+        .submit-btn {
+            width: 100%; margin-top: 30px; background: var(--blue); color: #fff;
+            border: none; padding: 13px; border-radius: 4px; font-size: 15px; font-weight: 500;
             box-shadow: 2px 3px 0 rgba(42,38,32,0.15);
             transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
-        button:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 3px 4px 0 rgba(42,38,32,0.18);
+        .submit-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 4px 0 rgba(42,38,32,0.18); }
+
+        /* --- Photo picker --- */
+        .photo-picker-btn {
+            width: 100%; padding: 12px; background: #fdfbf6; border: 1.5px dashed #D8CFB8;
+            border-radius: 4px; color: var(--ink-muted); font-size: 13.5px;
+        }
+        .photo-picker-btn:hover { border-color: var(--blue); color: var(--blue); }
+        .photo-picker-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+        .thumb-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .thumb {
+            position: relative; width: 64px; height: 80px; border-radius: 3px; overflow: hidden;
+            border: 3px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+        }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .thumb button {
+            position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; line-height: 16px;
+            border: none; border-radius: 50%; background: rgba(42,38,32,0.75); color: #fff;
+            font-size: 11px; padding: 0;
+        }
+
+        /* --- Crop modal --- */
+        .crop-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(42,38,32,0.72);
+            z-index: 1000; align-items: center; justify-content: center; flex-direction: column;
+        }
+        .crop-overlay.active { display: flex; }
+        .crop-box {
+            background: #fdfbf6; border-radius: 6px; padding: 20px; width: min(400px, 90vw);
+        }
+        .crop-image-wrap { max-height: 60vh; overflow: hidden; }
+        .crop-image-wrap img { max-width: 100%; display: block; }
+        .crop-actions { display: flex; gap: 10px; margin-top: 16px; }
+        .crop-actions button {
+            flex: 1; padding: 10px; border: none; border-radius: 4px; font-size: 13.5px;
+        }
+        .crop-save { background: var(--blue); color: #fff; }
+        .crop-skip { background: #E3DCCB; color: var(--ink); }
+        .crop-hint {
+            font-family: 'Space Mono', monospace; font-size: 10.5px; color: var(--ink-muted);
+            text-align: center; margin-top: 10px;
         }
     </style>
 </head>
@@ -116,21 +110,130 @@
     <a class="back-link" th:href="@{/}">← Back to MemoryLane</a>
     <h1>Add a new memory</h1>
 
-    <form th:action="@{/save}" th:object="${memory}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/save}" th:object="${memory}" method="post" enctype="multipart/form-data" id="memoryForm">
         <label>Title</label>
         <input type="text" th:field="*{title}" placeholder="Give it a name">
 
         <label>Your story</label>
         <textarea th:field="*{text}" rows="6" placeholder="What happened?"></textarea>
 
-        <label>Photos <span style="font-weight:400; text-transform:none; color:#a89f8f;">(up to 6)</span></label>
-        <input type="file" name="photos" accept="image/*" multiple>
+        <label>Photos <span style="font-weight:400; text-transform:none; color:#a89f8f;">(up to 6, cropped to 4:5)</span></label>
+        <button type="button" class="photo-picker-btn" id="pickBtn">+ Choose photos</button>
+        <input type="file" id="rawPicker" accept="image/*" multiple hidden>
+        <div class="thumb-strip" id="thumbStrip"></div>
 
         <label>Song link</label>
         <input type="url" th:field="*{songLink}" placeholder="https://open.spotify.com/...">
 
-        <button type="submit">Save memory</button>
+        <button type="submit" class="submit-btn">Save memory</button>
     </form>
 </div>
+
+<div class="crop-overlay" id="cropOverlay">
+    <div class="crop-box">
+        <div class="crop-image-wrap"><img id="cropImage"></div>
+        <div class="crop-actions">
+            <button type="button" class="crop-skip" id="cropSkip">Skip this photo</button>
+            <button type="button" class="crop-save" id="cropSave">Save crop</button>
+        </div>
+        <p class="crop-hint">Drag to reposition · Resize the box handles to zoom</p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+<script>
+    const MAX_PHOTOS = 6;
+    let processedFiles = []; // holds the final cropped File objects, in order
+    let queue = [];          // raw files waiting to be cropped
+    let cropper = null;
+
+    const pickBtn = document.getElementById('pickBtn');
+    const rawPicker = document.getElementById('rawPicker');
+    const thumbStrip = document.getElementById('thumbStrip');
+    const overlay = document.getElementById('cropOverlay');
+    const cropImage = document.getElementById('cropImage');
+    const cropSave = document.getElementById('cropSave');
+    const cropSkip = document.getElementById('cropSkip');
+    const form = document.getElementById('memoryForm');
+
+    pickBtn.addEventListener('click', () => rawPicker.click());
+
+    rawPicker.addEventListener('change', () => {
+        const remaining = MAX_PHOTOS - processedFiles.length;
+        queue = Array.from(rawPicker.files).slice(0, remaining);
+        rawPicker.value = ''; // reset so picking the same file again still fires "change"
+        processNext();
+    });
+
+    function processNext() {
+        if (queue.length === 0) {
+            updatePickerState();
+            return;
+        }
+        const file = queue.shift();
+        const reader = new FileReader();
+        reader.onload = e => {
+            cropImage.src = e.target.result;
+            overlay.classList.add('active');
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(cropImage, {
+                aspectRatio: 4 / 5,
+                viewMode: 1,
+                autoCropArea: 1,
+                background: false
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+
+    cropSave.addEventListener('click', () => {
+        cropper.getCroppedCanvas({ width: 800, height: 1000 }).toBlob(blob => {
+            const croppedFile = new File([blob], 'memory_' + Date.now() + '.jpg', { type: 'image/jpeg' });
+            processedFiles.push(croppedFile);
+            addThumb(croppedFile);
+            closeCropAndContinue();
+        }, 'image/jpeg', 0.9);
+    });
+
+    cropSkip.addEventListener('click', closeCropAndContinue);
+
+    function closeCropAndContinue() {
+        overlay.classList.remove('active');
+        if (cropper) { cropper.destroy(); cropper = null; }
+        processNext();
+    }
+
+    function addThumb(file) {
+        const url = URL.createObjectURL(file);
+        const div = document.createElement('div');
+        div.className = 'thumb';
+        div.innerHTML = '<img src="' + url + '"><button type="button">×</button>';
+        div.querySelector('button').addEventListener('click', () => {
+            processedFiles = processedFiles.filter(f => f !== file);
+            div.remove();
+            updatePickerState();
+        });
+        thumbStrip.appendChild(div);
+        updatePickerState();
+    }
+
+    function updatePickerState() {
+        const left = MAX_PHOTOS - processedFiles.length;
+        pickBtn.textContent = left > 0 ? '+ Choose photos (' + left + ' left)' : 'Maximum 6 photos added';
+        pickBtn.disabled = left <= 0;
+    }
+
+    // On submit, build the real "photos" field from the cropped files
+    form.addEventListener('submit', () => {
+        const dt = new DataTransfer();
+        processedFiles.forEach(f => dt.items.add(f));
+        rawPicker.files = dt.files;
+        rawPicker.name = 'photos'; // give it the field name the server expects
+        rawPicker.removeAttribute('hidden'); // ensure it's included in the multipart body
+        rawPicker.style.display = 'none';
+    });
+
+    updatePickerState();
+</script>
 </body>
 </html>

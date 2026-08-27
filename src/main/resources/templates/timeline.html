@@ -117,14 +117,15 @@
         }
         .photo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-            gap: 6px;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
             margin-bottom: 16px;
         }
         .photo-grid img {
             width: 100%;
-            height: 120px;
+            aspect-ratio: 4 / 5;
             object-fit: cover;
+            display: block;
             border-radius: 3px;
             border: 4px solid #fff;
             box-shadow: 0 1px 3px rgba(0,0,0,0.15);
