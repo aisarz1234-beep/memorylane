@@ -76,6 +76,31 @@
             letter-spacing: 0.1em; color: var(--gold); margin: 0 0 18px; display: flex; align-items: center; gap: 6px;
         }
 
+        /* --- On this day section ---*/
+        .on-this-day {
+            background: #fdfbf6;
+            border: 1.5px dashed #D8CFB8;
+            border-radius: 6px;
+            padding: 20px 22px;
+            margin-bottom: 40px;
+        }
+        .on-this-day-label {
+            font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--blue); margin: 0 0 12px; display: flex; align-items: center; gap: 6px;
+        }
+        .on-this-day-item {
+            display: flex; justify-content: space-between; align-items: baseline;
+            padding: 8px 0; border-top: 1px dashed #E3DCCB;
+        }
+        .on-this-day-item:first-of-type { border-top: none; }
+        .on-this-day-item a {
+            font-family: 'Fraunces', serif; font-size: 15px; color: var(--ink); text-decoration: none;
+        }
+        .on-this-day-item a:hover { color: var(--blue); }
+        .on-this-day-item span {
+            font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ink-muted);
+        }
+
         /* --- Month divider --- */
         .month-divider {
             display: flex; align-items: center; gap: 12px; margin: 40px 0 28px;
@@ -131,6 +156,12 @@
         }
         .song-link:hover { background: var(--sage); color: #fff; }
 
+        .edit-link {
+            font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--ink-muted); text-decoration: underline dotted;
+        }
+        .edit-link:hover { color: var(--blue); }
+
         .delete-form { margin: 0; }
         .delete-btn {
             background: none; border: none; font-family: 'Space Mono', monospace; font-size: 11px;
@@ -142,6 +173,33 @@
         .empty-state { text-align: center; border: 1.5px dashed #D8CFB8; border-radius: 6px; padding: 56px 24px; color: var(--ink-muted); }
         .empty-state .icon { font-family: 'Fraunces', serif; font-size: 30px; display: block; margin-bottom: 10px; color: #C9BFA5; }
         .empty-state p { margin: 0; font-size: 14px; }
+
+        .photo-grid img { cursor: zoom-in; }
+
+        .lightbox-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(20,18,15,0.92);
+            z-index: 1000; align-items: center; justify-content: center;
+        }
+        .lightbox-overlay.active { display: flex; }
+        .lightbox-overlay img {
+            max-width: 88vw; max-height: 82vh; object-fit: contain;
+            border: 6px solid #fffdf9; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .lightbox-close, .lightbox-prev, .lightbox-next {
+            position: absolute; background: none; border: none; color: #fffdf9;
+            font-family: 'Space Mono', monospace; cursor: pointer;
+        }
+        .lightbox-close { top: 24px; right: 32px; font-size: 22px; }
+        .lightbox-prev, .lightbox-next {
+            top: 50%; transform: translateY(-50%); font-size: 30px; padding: 12px;
+        }
+        .lightbox-prev { left: 16px; }
+        .lightbox-next { right: 16px; }
+        .lightbox-prev:hover, .lightbox-next:hover, .lightbox-close:hover { color: var(--gold); }
+        .lightbox-counter {
+            position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+            font-family: 'Space Mono', monospace; font-size: 12px; color: #cfc7b8;
+        }
 
         @media (max-width: 600px) {
             header h1 { font-size: 34px; }
@@ -158,6 +216,14 @@
         <p class="tagline">Every memory gets a page.</p>
         <a class="add-btn" th:href="@{/new}">+ Add a memory</a>
     </header>
+
+    <div class="on-this-day" th:if="${not #lists.isEmpty(onThisDay)}">
+        <p class="on-this-day-label">☀ On this day</p>
+        <div class="on-this-day-item" th:each="m : ${onThisDay}">
+            <a th:href="@{'/edit/' + ${m.id}}" th:text="${m.title}">Title</a>
+            <span th:text="${#temporals.format(m.createdAt, 'yyyy')}">Year</span>
+        </div>
+    </div>
 
     <form class="search-form" th:action="@{/}" method="get">
         <input type="text" name="q" placeholder="Search your memories..." th:value="${query}">
@@ -206,7 +272,7 @@
                 <span class="card-tag" th:each="t : ${#strings.arraySplit(memory.tags, ',')}" th:text="${#strings.trim(t)}">tag</span>
             </div>
             <div class="photo-grid" th:if="${not #lists.isEmpty(memory.photoPaths)}">
-                <img th:each="photo : ${memory.photoPaths}" th:src="@{${photo}}" />
+                <img th:each="photo : ${memory.photoPaths}" th:src="@{${photo}}" onclick="openLightbox(this)" />
             </div>
             <p class="text" th:text="${memory.text}">Text</p>
             <div class="card-footer">
@@ -216,6 +282,7 @@
                         <button type="submit" class="favorite-btn">☆</button>
                     </form>
                     <a th:if="${memory.songLink}" class="song-link" th:href="${memory.songLink}" target="_blank">▸ Play song</a>
+                    <a class="edit-link" th:href="@{'/edit/' + ${memory.id}}">✎ Edit</a>
                     <form class="delete-form" th:action="@{'/delete/' + ${memory.id}}" method="post" onsubmit="return confirm('Delete this memory?');">
                         <button type="submit" class="delete-btn">Remove</button>
                     </form>
@@ -229,5 +296,54 @@
         <p>Nothing here yet. Add your first memory above, or try a different search.</p>
     </div>
 </div>
+<div class="lightbox-overlay" id="lightboxOverlay">
+    <button class="lightbox-close" onclick="closeLightbox()">✕ Close</button>
+    <button class="lightbox-prev" onclick="navLightbox(-1)">‹</button>
+    <img id="lightboxImg" src="">
+    <button class="lightbox-next" onclick="navLightbox(1)">›</button>
+    <span class="lightbox-counter" id="lightboxCounter"></span>
+</div>
+
+<script>
+    let lbGroup = [];
+    let lbIndex = 0;
+
+    function openLightbox(imgEl) {
+        const grid = imgEl.closest('.photo-grid');
+        const imgs = Array.from(grid.querySelectorAll('img'));
+        lbGroup = imgs.map(i => i.src);
+        lbIndex = imgs.indexOf(imgEl);
+        renderLightbox();
+        document.getElementById('lightboxOverlay').classList.add('active');
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightboxOverlay').classList.remove('active');
+    }
+
+    function navLightbox(dir) {
+        lbIndex = (lbIndex + dir + lbGroup.length) % lbGroup.length;
+        renderLightbox();
+    }
+
+    function renderLightbox() {
+        document.getElementById('lightboxImg').src = lbGroup[lbIndex];
+        document.getElementById('lightboxCounter').textContent = (lbIndex + 1) + ' / ' + lbGroup.length;
+        document.querySelector('.lightbox-prev').style.display = lbGroup.length > 1 ? 'block' : 'none';
+        document.querySelector('.lightbox-next').style.display = lbGroup.length > 1 ? 'block' : 'none';
+    }
+
+    document.addEventListener('keydown', e => {
+        const overlay = document.getElementById('lightboxOverlay');
+        if (!overlay.classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') navLightbox(-1);
+        if (e.key === 'ArrowRight') navLightbox(1);
+    });
+
+    document.getElementById('lightboxOverlay').addEventListener('click', e => {
+        if (e.target.id === 'lightboxOverlay') closeLightbox();
+    });
+</script>
 </body>
 </html>

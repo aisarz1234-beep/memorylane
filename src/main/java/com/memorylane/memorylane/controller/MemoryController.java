@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,6 +28,9 @@ public class MemoryController {
     public String timeline(@RequestParam(value = "q", required = false) String q,
                            @RequestParam(value = "tag", required = false) String tag,
                            Model model) {
+        LocalDate today = LocalDate.now();
+        List<Memory> onThisDay = repo.findOnThisDay(today.getMonthValue(), today.getDayOfMonth(), today.getYear());
+        model.addAttribute("onThisDay", onThisDay);
 
         List<Memory> results;
         if (q != null && !q.isBlank()) {
