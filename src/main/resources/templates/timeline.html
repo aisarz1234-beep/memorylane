@@ -8,196 +8,144 @@
     <style>
         :root {
             --paper: #F1ECDF;
-            --paper-deep: #E7DFC9;
             --ink: #2A2620;
             --ink-muted: #83796A;
             --blue: #34506B;
             --sage: #7C8B6F;
             --rust: #B8503F;
+            --gold: #B8923F;
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             background-color: var(--paper);
-            background-image:
-                    radial-gradient(rgba(0,0,0,0.025) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(0,0,0,0.025) 1px, transparent 1px);
             background-size: 3px 3px;
             color: var(--ink);
             font-family: 'Inter', sans-serif;
         }
-        .container {
-            max-width: 640px;
-            margin: 0 auto;
-            padding: 72px 24px 120px;
-        }
-        header { margin-bottom: 56px; }
+        .container { max-width: 640px; margin: 0 auto; padding: 72px 24px 120px; }
+
+        header { margin-bottom: 40px; }
         header .eyebrow {
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--ink-muted);
-            display: block;
-            margin-bottom: 10px;
+            font-family: 'Space Mono', monospace; font-size: 11px;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--ink-muted); display: block; margin-bottom: 10px;
         }
         header h1 {
-            font-family: 'Fraunces', serif;
-            font-style: italic;
-            font-weight: 500;
-            font-size: 42px;
-            letter-spacing: -0.5px;
-            margin: 0 0 6px;
+            font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+            font-size: 42px; letter-spacing: -0.5px; margin: 0 0 6px;
         }
-        header p.tagline {
-            font-size: 15px;
-            color: var(--ink-muted);
-            margin: 0 0 28px;
-        }
+        header p.tagline { font-size: 15px; color: var(--ink-muted); margin: 0 0 28px; }
         .add-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--blue);
-            color: #fff;
-            text-decoration: none;
-            padding: 11px 22px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 500;
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--blue); color: #fff; text-decoration: none;
+            padding: 11px 22px; border-radius: 4px; font-size: 14px; font-weight: 500;
             box-shadow: 2px 3px 0 rgba(42,38,32,0.15);
             transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
-        .add-btn:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 3px 4px 0 rgba(42,38,32,0.18);
+        .add-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 4px 0 rgba(42,38,32,0.18); }
+
+        /* --- Search + filters --- */
+        .search-form { display: flex; gap: 8px; margin-bottom: 16px; }
+        .search-form input {
+            flex: 1; padding: 10px 14px; font-size: 14px; font-family: 'Inter', sans-serif;
+            border: 1.5px solid #E3DCCB; border-radius: 999px; background: #fdfbf6; color: var(--ink);
+        }
+        .search-form input:focus { outline: none; border-color: var(--blue); }
+        .search-form button {
+            font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase;
+            background: #fff; border: 1.5px solid #E3DCCB; border-radius: 999px; padding: 0 18px; cursor: pointer;
+        }
+        .clear-link {
+            font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase;
+            color: var(--rust); text-decoration: none; display: inline-block; margin-bottom: 24px;
+        }
+        .tag-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+        .tag-pill {
+            font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 0.04em; color: var(--ink-muted); text-decoration: none;
+            border: 1px solid #DCD3BC; padding: 5px 12px; border-radius: 999px;
+        }
+        .tag-pill:hover { border-color: var(--blue); color: var(--blue); }
+        .tag-pill.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+        /* --- Favorites section --- */
+        .favorites-label {
+            font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--gold); margin: 0 0 18px; display: flex; align-items: center; gap: 6px;
         }
 
+        /* --- Month divider --- */
+        .month-divider {
+            display: flex; align-items: center; gap: 12px; margin: 40px 0 28px;
+        }
+        .month-divider span {
+            font-family: 'Fraunces', serif; font-style: italic; font-size: 16px; color: var(--ink-muted); white-space: nowrap;
+        }
+        .month-divider::before, .month-divider::after {
+            content: ""; flex: 1; height: 1px; background: #DCD3BC;
+        }
+
+        /* --- Memory card --- */
         .memory-card {
-            position: relative;
-            background: #fffdf9;
-            border-radius: 3px;
-            padding: 32px 28px 26px;
-            margin: 0 auto 48px;
-            max-width: 480px;
+            position: relative; background: #fffdf9; border-radius: 3px;
+            padding: 32px 28px 26px; margin: 0 auto 48px; max-width: 480px;
             box-shadow: 0 10px 24px -12px rgba(42,38,32,0.28);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .memory-card:nth-child(3n+1) { transform: rotate(-1.1deg); }
         .memory-card:nth-child(3n+2) { transform: rotate(0.8deg); }
         .memory-card:nth-child(3n+3) { transform: rotate(-0.4deg); }
-        .memory-card:hover {
-            transform: rotate(0deg) translateY(-3px);
-            box-shadow: 0 16px 30px -14px rgba(42,38,32,0.32);
-        }
+        .memory-card:hover { transform: rotate(0deg) translateY(-3px); box-shadow: 0 16px 30px -14px rgba(42,38,32,0.32); }
         .memory-card::before {
-            content: "";
-            position: absolute;
-            top: -14px;
-            left: 50%;
-            width: 68px;
-            height: 26px;
-            margin-left: -34px;
-            background: repeating-linear-gradient(
-                    115deg,
-                    rgba(124,139,111,0.55),
-                    rgba(124,139,111,0.55) 3px,
-                    rgba(124,139,111,0.4) 3px,
-                    rgba(124,139,111,0.4) 6px
-            );
-            opacity: 0.85;
-            transform: rotate(-3deg);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            content: ""; position: absolute; top: -14px; left: 50%; width: 68px; height: 26px; margin-left: -34px;
+            background: repeating-linear-gradient(115deg, rgba(124,139,111,0.55), rgba(124,139,111,0.55) 3px, rgba(124,139,111,0.4) 3px, rgba(124,139,111,0.4) 6px);
+            opacity: 0.85; transform: rotate(-3deg); box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .memory-card.is-favorite::before { background: repeating-linear-gradient(115deg, rgba(184,146,63,0.55), rgba(184,146,63,0.55) 3px, rgba(184,146,63,0.4) 3px, rgba(184,146,63,0.4) 6px); }
+
+        .memory-card h2 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 21px; margin: 0 0 10px; }
+
+        .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+        .card-tag {
+            font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase;
+            color: var(--sage); background: rgba(124,139,111,0.1); padding: 3px 9px; border-radius: 999px;
         }
 
-        .memory-card h2 {
-            font-family: 'Fraunces', serif;
-            font-weight: 600;
-            font-size: 21px;
-            margin: 0 0 12px;
-        }
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-        .photo-grid img {
-            width: 100%;
-            aspect-ratio: 4 / 5;
-            object-fit: cover;
-            display: block;
-            border-radius: 3px;
-            border: 4px solid #fff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-        }
-        .memory-card p.text {
-            font-size: 15px;
-            line-height: 1.7;
-            color: #453F35;
-            margin: 0 0 18px;
-            white-space: pre-line;
-        }
+        .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-bottom: 16px; }
+        .photo-grid img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; border-radius: 3px; border: 4px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
 
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px dashed #E3DCCB;
-            padding-top: 14px;
-        }
+        .memory-card p.text { font-size: 15px; line-height: 1.7; color: #453F35; margin: 0 0 18px; white-space: pre-line; }
+
+        .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #E3DCCB; padding-top: 14px; }
+        .memory-date { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ink-muted); }
+        .card-actions { display: flex; align-items: center; gap: 14px; }
+
+        .favorite-btn { background: none; border: none; cursor: pointer; font-size: 16px; color: #DCD3BC; padding: 0; line-height: 1; }
+        .favorite-btn.active { color: var(--gold); }
+
         .song-link {
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--sage);
-            text-decoration: none;
-            border: 1px solid var(--sage);
-            padding: 5px 10px;
-            border-radius: 999px;
+            font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+            color: var(--sage); text-decoration: none; border: 1px solid var(--sage); padding: 5px 10px; border-radius: 999px;
         }
         .song-link:hover { background: var(--sage); color: #fff; }
-        .memory-date {
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            color: var(--ink-muted);
-        }
+
         .delete-form { margin: 0; }
         .delete-btn {
-            background: none;
-            border: none;
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--rust);
-            cursor: pointer;
-            padding: 4px 0;
+            background: none; border: none; font-family: 'Space Mono', monospace; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 0.05em; color: var(--rust); cursor: pointer; padding: 4px 0;
             text-decoration: underline dotted;
         }
         .delete-btn:hover { color: #8f3c29; }
 
-        .empty-state {
-            text-align: center;
-            border: 1.5px dashed #D8CFB8;
-            border-radius: 6px;
-            padding: 56px 24px;
-            color: var(--ink-muted);
-        }
-        .empty-state .icon {
-            font-family: 'Fraunces', serif;
-            font-size: 30px;
-            display: block;
-            margin-bottom: 10px;
-            color: #C9BFA5;
-        }
+        .empty-state { text-align: center; border: 1.5px dashed #D8CFB8; border-radius: 6px; padding: 56px 24px; color: var(--ink-muted); }
+        .empty-state .icon { font-family: 'Fraunces', serif; font-size: 30px; display: block; margin-bottom: 10px; color: #C9BFA5; }
         .empty-state p { margin: 0; font-size: 14px; }
 
         @media (max-width: 600px) {
             header h1 { font-size: 34px; }
-            .memory-card:nth-child(3n+1),
-            .memory-card:nth-child(3n+2),
-            .memory-card:nth-child(3n+3) { transform: rotate(0deg); }
+            .memory-card:nth-child(3n+1), .memory-card:nth-child(3n+2), .memory-card:nth-child(3n+3) { transform: rotate(0deg); }
             .memory-card:hover { transform: translateY(-2px); }
         }
     </style>
@@ -211,28 +159,73 @@
         <a class="add-btn" th:href="@{/new}">+ Add a memory</a>
     </header>
 
-    <div th:each="memory : ${memories}" class="memory-card">
-        <h2 th:text="${memory.title}">Title</h2>
-        <div class="photo-grid" th:if="${not #lists.isEmpty(memory.photoPaths)}">
-            <img th:each="photo : ${memory.photoPaths}" th:src="@{${photo}}" />
-        </div>
-        <p class="text" th:text="${memory.text}">Text</p>
+    <form class="search-form" th:action="@{/}" method="get">
+        <input type="text" name="q" placeholder="Search your memories..." th:value="${query}">
+        <button type="submit">Search</button>
+    </form>
 
-        <div class="card-footer">
-            <span class="memory-date" th:text="${memory.createdAt}">Date</span>
-            <div style="display:flex; align-items:center; gap:14px;">
-                <a th:if="${memory.songLink}" class="song-link" th:href="${memory.songLink}" target="_blank">▸ Play song</a>
-                <form class="delete-form" th:action="@{'/delete/' + ${memory.id}}" method="post"
-                      onsubmit="return confirm('Delete this memory?');">
-                    <button type="submit" class="delete-btn">Remove</button>
-                </form>
+    <a class="clear-link" th:if="${query != null and !query.isEmpty()} or ${activeTag != null and !activeTag.isEmpty()}" th:href="@{/}">✕ Clear filters</a>
+
+    <div class="tag-pills" th:if="${not #lists.isEmpty(allTags)}">
+        <a th:each="t : ${allTags}" class="tag-pill" th:classappend="${t == activeTag} ? ' active' : ''"
+           th:href="@{/(tag=${t})}" th:text="${t}">tag</a>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(favorites)}">
+        <p class="favorites-label">★ Favorites</p>
+        <div th:each="memory : ${favorites}" class="memory-card is-favorite">
+            <h2 th:text="${memory.title}">Title</h2>
+            <div class="card-tags" th:if="${memory.tags != null and !memory.tags.isEmpty()}">
+                <span class="card-tag" th:each="t : ${#strings.arraySplit(memory.tags, ',')}" th:text="${#strings.trim(t)}">tag</span>
+            </div>
+            <div class="photo-grid" th:if="${not #lists.isEmpty(memory.photoPaths)}">
+                <img th:each="photo : ${memory.photoPaths}" th:src="@{${photo}}" />
+            </div>
+            <p class="text" th:text="${memory.text}">Text</p>
+            <div class="card-footer">
+                <span class="memory-date" th:text="${memory.createdAt}">Date</span>
+                <div class="card-actions">
+                    <form class="delete-form" th:action="@{'/favorite/' + ${memory.id}}" method="post">
+                        <button type="submit" class="favorite-btn active">★</button>
+                    </form>
+                    <a th:if="${memory.songLink}" class="song-link" th:href="${memory.songLink}" target="_blank">▸ Play song</a>
+                    <form class="delete-form" th:action="@{'/delete/' + ${memory.id}}" method="post" onsubmit="return confirm('Delete this memory?');">
+                        <button type="submit" class="delete-btn">Remove</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="empty-state" th:if="${#lists.isEmpty(memories)}">
+    <div th:each="entry : ${grouped}">
+        <div class="month-divider"><span th:text="${entry.key}">Month Year</span></div>
+        <div th:each="memory : ${entry.value}" class="memory-card">
+            <h2 th:text="${memory.title}">Title</h2>
+            <div class="card-tags" th:if="${memory.tags != null and !memory.tags.isEmpty()}">
+                <span class="card-tag" th:each="t : ${#strings.arraySplit(memory.tags, ',')}" th:text="${#strings.trim(t)}">tag</span>
+            </div>
+            <div class="photo-grid" th:if="${not #lists.isEmpty(memory.photoPaths)}">
+                <img th:each="photo : ${memory.photoPaths}" th:src="@{${photo}}" />
+            </div>
+            <p class="text" th:text="${memory.text}">Text</p>
+            <div class="card-footer">
+                <span class="memory-date" th:text="${memory.createdAt}">Date</span>
+                <div class="card-actions">
+                    <form class="delete-form" th:action="@{'/favorite/' + ${memory.id}}" method="post">
+                        <button type="submit" class="favorite-btn">☆</button>
+                    </form>
+                    <a th:if="${memory.songLink}" class="song-link" th:href="${memory.songLink}" target="_blank">▸ Play song</a>
+                    <form class="delete-form" th:action="@{'/delete/' + ${memory.id}}" method="post" onsubmit="return confirm('Delete this memory?');">
+                        <button type="submit" class="delete-btn">Remove</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="empty-state" th:if="${isEmpty}">
         <span class="icon">✳</span>
-        <p>This page is empty. Add your first memory above.</p>
+        <p>Nothing here yet. Add your first memory above, or try a different search.</p>
     </div>
 </div>
 </body>

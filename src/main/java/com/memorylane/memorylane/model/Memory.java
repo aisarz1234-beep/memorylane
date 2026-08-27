@@ -23,7 +23,11 @@ public class Memory {
     @OrderColumn(name = "photo_order")
     private List<String> photoPaths = new ArrayList<>();
 
-    private String songLink;    // Spotify/YouTube URL
+    private String songLink;
+
+    private String tags;          // comma-separated, e.g. "travel, family"
+
+    private boolean favorite = false;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -43,6 +47,12 @@ public class Memory {
 
     public String getSongLink() { return songLink; }
     public void setSongLink(String songLink) { this.songLink = songLink; }
+
+    public String getTags() { return tags; }
+    public void setTags(String tags) { this.tags = tags; }
+
+    public boolean isFavorite() { return favorite; }
+    public void setFavorite(boolean favorite) { this.favorite = favorite; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

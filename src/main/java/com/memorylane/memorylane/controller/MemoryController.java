@@ -11,8 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.UUID;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class MemoryController {
@@ -23,8 +24,46 @@ public class MemoryController {
     private final String uploadDir = "uploads/";
 
     @GetMapping("/")
-    public String timeline(Model model) {
-        model.addAttribute("memories", repo.findAllByOrderByCreatedAtDesc());
+    public String timeline(@RequestParam(value = "q", required = false) String q,
+                           @RequestParam(value = "tag", required = false) String tag,
+                           Model model) {
+
+        List<Memory> results;
+        if (q != null && !q.isBlank()) {
+            results = repo.findByTitleContainingIgnoreCaseOrTextContainingIgnoreCaseOrderByCreatedAtDesc(q, q);
+        } else if (tag != null && !tag.isBlank()) {
+            results = repo.findByTagsContainingIgnoreCaseOrderByCreatedAtDesc(tag);
+        } else {
+            results = repo.findAllByOrderByCreatedAtDesc();
+        }
+
+        List<Memory> favorites = results.stream().filter(Memory::isFavorite).collect(Collectors.toList());
+        List<Memory> rest = results.stream().filter(m -> !m.isFavorite()).collect(Collectors.toList());
+
+        DateTimeFormatter monthFmt = DateTimeFormatter.ofPattern("MMMM yyyy");
+        Map<String, List<Memory>> grouped = new LinkedHashMap<>();
+        for (Memory m : rest) {
+            String key = m.getCreatedAt().format(monthFmt);
+            grouped.computeIfAbsent(key, k -> new ArrayList<>()).add(m);
+        }
+
+        // Collect all distinct tags across every memory, for the filter pill bar
+        Set<String> allTags = new TreeSet<>();
+        for (Memory m : repo.findAll()) {
+            if (m.getTags() != null && !m.getTags().isBlank()) {
+                for (String t : m.getTags().split(",")) {
+                    String trimmed = t.trim();
+                    if (!trimmed.isEmpty()) allTags.add(trimmed);
+                }
+            }
+        }
+
+        model.addAttribute("favorites", favorites);
+        model.addAttribute("grouped", grouped);
+        model.addAttribute("allTags", allTags);
+        model.addAttribute("query", q);
+        model.addAttribute("activeTag", tag);
+        model.addAttribute("isEmpty", results.isEmpty());
         return "timeline";
     }
 
@@ -39,7 +78,7 @@ public class MemoryController {
                        @RequestParam(value = "photos", required = false) List<MultipartFile> photos) throws IOException {
         if (photos != null) {
             Files.createDirectories(Paths.get(uploadDir));
-            int max = Math.min(photos.size(), 6); // cap at 6, even if more are selected
+            int max = Math.min(photos.size(), 6);
             for (int i = 0; i < max; i++) {
                 MultipartFile photo = photos.get(i);
                 if (!photo.isEmpty()) {
@@ -56,6 +95,15 @@ public class MemoryController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         repo.deleteById(id);
+        return "redirect:/";
+    }
+
+    @PostMapping("/favorite/{id}")
+    public String toggleFavorite(@PathVariable Long id) {
+        repo.findById(id).ifPresent(m -> {
+            m.setFavorite(!m.isFavorite());
+            repo.save(m);
+        });
         return "redirect:/";
     }
 }

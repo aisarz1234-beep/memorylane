@@ -122,6 +122,9 @@
         <input type="file" id="rawPicker" accept="image/*" multiple hidden>
         <div class="thumb-strip" id="thumbStrip"></div>
 
+        <label>Tags <span style="font-weight:400; text-transform:none; color:#a89f8f;">(comma separated)</span></label>
+        <input type="text" th:field="*{tags}" placeholder="travel, family, milestone">
+
         <label>Song link</label>
         <input type="url" th:field="*{songLink}" placeholder="https://open.spotify.com/...">
 

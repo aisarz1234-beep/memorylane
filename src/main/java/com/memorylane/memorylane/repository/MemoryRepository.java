@@ -6,4 +6,9 @@ import java.util.List;
 
 public interface MemoryRepository extends JpaRepository<Memory, Long> {
     List<Memory> findAllByOrderByCreatedAtDesc();
+
+    List<Memory> findByTitleContainingIgnoreCaseOrTextContainingIgnoreCaseOrderByCreatedAtDesc(
+            String title, String text);
+
+    List<Memory> findByTagsContainingIgnoreCaseOrderByCreatedAtDesc(String tag);
 }
