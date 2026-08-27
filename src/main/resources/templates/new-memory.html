@@ -108,9 +108,10 @@
 <body>
 <div class="container">
     <a class="back-link" th:href="@{/}">← Back to MemoryLane</a>
-    <h1>Add a new memory</h1>
+    <h1 th:text="${isEdit != null and isEdit} ? 'Edit memory' : 'Add a new memory'">Add a new memory</h1>
 
-    <form th:action="@{/save}" th:object="${memory}" method="post" enctype="multipart/form-data" id="memoryForm">
+    <form th:action="${isEdit != null and isEdit} ? @{'/update/' + ${memory.id}} : @{/save}"
+          th:object="${memory}" method="post" enctype="multipart/form-data" id="memoryForm">
         <label>Title</label>
         <input type="text" th:field="*{title}" placeholder="Give it a name">
 
@@ -118,6 +119,11 @@
         <textarea th:field="*{text}" rows="6" placeholder="What happened?"></textarea>
 
         <label>Photos <span style="font-weight:400; text-transform:none; color:#a89f8f;">(up to 6, cropped to 4:5)</span></label>
+        <div class="thumb-strip" th:if="${memory.photoPaths != null and not #lists.isEmpty(memory.photoPaths)}">
+            <div class="thumb" th:each="p : ${memory.photoPaths}">
+                <img th:src="@{${p}}" />
+            </div>
+        </div>
         <button type="button" class="photo-picker-btn" id="pickBtn">+ Choose photos</button>
         <input type="file" id="rawPicker" accept="image/*" multiple hidden>
         <div class="thumb-strip" id="thumbStrip"></div>
@@ -128,7 +134,7 @@
         <label>Song link</label>
         <input type="url" th:field="*{songLink}" placeholder="https://open.spotify.com/...">
 
-        <button type="submit" class="submit-btn">Save memory</button>
+        <button type="submit" class="submit-btn" th:text="${isEdit != null and isEdit} ? 'Update memory' : 'Save memory'">Save memory</button>
     </form>
 </div>
 

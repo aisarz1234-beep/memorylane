@@ -188,6 +188,7 @@
                     <form class="delete-form" th:action="@{'/favorite/' + ${memory.id}}" method="post">
                         <button type="submit" class="favorite-btn active">★</button>
                     </form>
+                    <a class="song-link" style="border-color:#DCD3BC; color:var(--ink-muted);" th:href="@{'/edit/' + ${memory.id}}">✎ Edit</a>
                     <a th:if="${memory.songLink}" class="song-link" th:href="${memory.songLink}" target="_blank">▸ Play song</a>
                     <form class="delete-form" th:action="@{'/delete/' + ${memory.id}}" method="post" onsubmit="return confirm('Delete this memory?');">
                         <button type="submit" class="delete-btn">Remove</button>

@@ -106,4 +106,39 @@ public class MemoryController {
         });
         return "redirect:/";
     }
+
+    @GetMapping("/edit/{id}")
+    public String editForm(@PathVariable Long id, Model model) {
+        Memory memory = repo.findById(id).orElseThrow();
+        model.addAttribute("memory", memory);
+        model.addAttribute("isEdit", true);
+        return "new-memory";
+    }
+
+    @PostMapping("/update/{id}")
+    public String update(@PathVariable Long id,
+                         @ModelAttribute Memory formMemory,
+                         @RequestParam(value = "photos", required = false) List<MultipartFile> photos) throws IOException {
+        Memory existing = repo.findById(id).orElseThrow();
+        existing.setTitle(formMemory.getTitle());
+        existing.setText(formMemory.getText());
+        existing.setSongLink(formMemory.getSongLink());
+        existing.setTags(formMemory.getTags());
+
+        if (photos != null) {
+            Files.createDirectories(Paths.get(uploadDir));
+            int room = 6 - existing.getPhotoPaths().size();
+            int max = Math.min(photos.size(), Math.max(room, 0));
+            for (int i = 0; i < max; i++) {
+                MultipartFile photo = photos.get(i);
+                if (!photo.isEmpty()) {
+                    String filename = UUID.randomUUID() + "_" + photo.getOriginalFilename();
+                    photo.transferTo(Paths.get(uploadDir + filename));
+                    existing.getPhotoPaths().add("/uploads/" + filename);
+                }
+            }
+        }
+        repo.save(existing);
+        return "redirect:/";
+    }
 }
