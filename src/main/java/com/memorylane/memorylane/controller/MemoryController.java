@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.memorylane.memorylane.model.SiteSettings;
+import com.memorylane.memorylane.repository.SiteSettingsRepository;
 
 import java.time.LocalDate;
 import java.io.IOException;
@@ -22,6 +24,9 @@ public class MemoryController {
     @Autowired
     private MemoryRepository repo;
 
+    @Autowired
+    private SiteSettingsRepository settingsRepo;
+
     private final String uploadDir = "uploads/";
 
     @GetMapping("/")
@@ -31,6 +36,9 @@ public class MemoryController {
         LocalDate today = LocalDate.now();
         List<Memory> onThisDay = repo.findOnThisDay(today.getMonthValue(), today.getDayOfMonth(), today.getYear());
         model.addAttribute("onThisDay", onThisDay);
+
+        SiteSettings settings = settingsRepo.findById(1L).orElse(new SiteSettings());
+        model.addAttribute("coverPhoto", settings.getCoverPhotoPath());
 
         List<Memory> results;
         if (q != null && !q.isBlank()) {
@@ -144,6 +152,27 @@ public class MemoryController {
             }
         }
         repo.save(existing);
+        return "redirect:/";
+    }
+
+    @GetMapping("/settings")
+    public String settingsForm(Model model) {
+        SiteSettings settings = settingsRepo.findById(1L).orElse(new SiteSettings());
+        model.addAttribute("settings", settings);
+        return "settings";
+    }
+
+    @PostMapping("/settings/cover")
+    public String updateCover(@RequestParam("cover") MultipartFile cover) throws IOException {
+        if (!cover.isEmpty()) {
+            Files.createDirectories(Paths.get(uploadDir));
+            String filename = UUID.randomUUID() + "_" + cover.getOriginalFilename();
+            cover.transferTo(Paths.get(uploadDir + filename));
+
+            SiteSettings settings = settingsRepo.findById(1L).orElse(new SiteSettings());
+            settings.setCoverPhotoPath("/uploads/" + filename);
+            settingsRepo.save(settings);
+        }
         return "redirect:/";
     }
 }
