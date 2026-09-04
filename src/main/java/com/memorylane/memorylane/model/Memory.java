@@ -27,6 +27,8 @@ public class Memory {
 
     private String tags;          // comma-separated, e.g. "travel, family"
 
+    private String mood;
+
     private boolean favorite = false;
 
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -50,6 +52,9 @@ public class Memory {
 
     public String getTags() { return tags; }
     public void setTags(String tags) { this.tags = tags; }
+
+    public String getMood() { return mood; }
+    public void setMood(String mood) { this.mood = mood; }
 
     public boolean isFavorite() { return favorite; }
     public void setFavorite(boolean favorite) { this.favorite = favorite; }

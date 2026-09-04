@@ -115,6 +115,16 @@
         <label>Title</label>
         <input type="text" th:field="*{title}" placeholder="Give it a name">
 
+        <label>Mood <span style="font-weight:400; text-transform:none; color:#a89f8f;">(optional)</span></label>
+        <select th:field="*{mood}" style="width:100%; padding:11px 13px; font-size:14.5px; font-family:'Inter',sans-serif; border:1.5px solid #E3DCCB; border-radius:4px; background:#fdfbf6; color:var(--ink);">
+            <option value="">No mood</option>
+            <option value="😊">😊 Happy</option>
+            <option value="🥹">🥹 Touched</option>
+            <option value="😌">😌 Peaceful</option>
+            <option value="🎉">🎉 Celebratory</option>
+            <option value="😢">😢 Bittersweet</option>
+            <option value="😴">😴 Cozy</option>
+        </select>
         <label>Your story</label>
         <textarea th:field="*{text}" rows="6" placeholder="What happened?"></textarea>
 

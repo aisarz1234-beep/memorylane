@@ -128,6 +128,7 @@ public class MemoryController {
         existing.setText(formMemory.getText());
         existing.setSongLink(formMemory.getSongLink());
         existing.setTags(formMemory.getTags());
+        existing.setMood(formMemory.getMood());
 
         if (photos != null) {
             Files.createDirectories(Paths.get(uploadDir));
